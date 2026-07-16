@@ -16,12 +16,14 @@ import net.minecraft.class_437;
 
 @Environment(EnvType.CLIENT)
 public class StarLauncherClient implements ClientModInitializer {
+	/** Separate binding from Chaos Glove (G). J = GLFW key 74. */
 	private static class_304 openMenuKey;
 
 	@Override
 	public void onInitializeClient() {
+		// Key J (74) - does NOT share G with Chaos Glove
 		openMenuKey = KeyBindingHelper.registerKeyBinding(
-			new class_304("key.chaos_glove.star_launcher_menu", 71, "category.chaos_glove")
+			new class_304("key.chaos_glove.star_launcher_menu", 74, "category.chaos_glove")
 		);
 		ClientTickEvents.END_CLIENT_TICK.register(new MenuTickHandler());
 		HudRenderCallback.EVENT.register(new ManaHudHandler());
