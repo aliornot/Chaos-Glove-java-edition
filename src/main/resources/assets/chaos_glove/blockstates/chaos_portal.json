@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "chaos_glove:block/chaos_portal"
+    }
+  }
+}
