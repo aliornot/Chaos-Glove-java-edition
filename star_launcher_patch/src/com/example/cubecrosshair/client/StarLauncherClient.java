@@ -23,8 +23,14 @@ public class StarLauncherClient implements ClientModInitializer {
 		openMenuKey = KeyBindingHelper.registerKeyBinding(
 			new class_304("key.chaos_glove.star_launcher_menu", 71, "category.chaos_glove")
 		);
+		ClientTickEvents.END_CLIENT_TICK.register(new MenuTickHandler());
+		HudRenderCallback.EVENT.register(new ManaHudHandler());
+	}
 
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+	public static final class MenuTickHandler implements ClientTickEvents.EndTick {
+		@Override
+		public void onEndTick(class_310 client) {
+			if (openMenuKey == null) return;
 			while (openMenuKey.method_1436()) {
 				if (client.field_1724 == null) continue;
 				class_1799 main = client.field_1724.method_5998(class_1268.field_5808);
@@ -33,9 +39,12 @@ public class StarLauncherClient implements ClientModInitializer {
 				if (!holding) continue;
 				client.method_1507((class_437) new StarLauncherScreen());
 			}
-		});
+		}
+	}
 
-		HudRenderCallback.EVENT.register((class_332 gui, float tickDelta) -> {
+	public static final class ManaHudHandler implements HudRenderCallback {
+		@Override
+		public void onHudRender(class_332 gui, float tickDelta) {
 			class_310 client = class_310.method_1551();
 			if (client == null || client.field_1724 == null) return;
 			if (client.field_1690 != null && client.field_1690.field_1842) return;
@@ -68,7 +77,6 @@ public class StarLauncherClient implements ClientModInitializer {
 			gui.method_25294(left - 4, top - 14, right + 4, bottom + 4, 0xFF3A2614);
 			gui.method_25294(left - 3, top - 13, right + 3, bottom + 3, 0xFFC9A227);
 			gui.method_25294(left - 2, top - 12, right + 2, bottom + 2, 0xFF5C3A1E);
-
 			gui.method_25294(left, top, right, bottom, 0xFF0A2030);
 
 			float ratio = mana / (float) StarLauncherItem.MAX_MANA;
@@ -82,6 +90,6 @@ public class StarLauncherClient implements ClientModInitializer {
 			gui.method_25303(client.field_1772, "\u00a7b\u041c\u0430\u043d\u0430", left - 2, top - 11, 0xFFFFFF, true);
 			String manaText = mana + "/" + StarLauncherItem.MAX_MANA;
 			gui.method_25303(client.field_1772, "\u00a7b" + manaText, left - 2, bottom + 6, 0xFFFFFF, true);
-		});
+		}
 	}
 }
