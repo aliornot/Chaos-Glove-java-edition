@@ -1,0 +1,4 @@
+package net.minecraft;
+public interface class_2561 {
+  static class_2561 method_43470(String s) { return new class_2561(){}; }
+}

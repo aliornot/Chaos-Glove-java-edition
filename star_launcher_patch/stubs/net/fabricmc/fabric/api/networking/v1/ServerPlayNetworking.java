@@ -10,5 +10,6 @@ public class ServerPlayNetworking {
   public interface PlayChannelHandler {
     void receive(MinecraftServer server, class_3222 player, class_3244 handler, class_2540 buf, PacketSender responseSender);
   }
-  public static void registerGlobalReceiver(class_2960 id, PlayChannelHandler h) {}
+  /** Real Fabric API returns boolean */
+  public static boolean registerGlobalReceiver(class_2960 id, PlayChannelHandler h) { return true; }
 }
