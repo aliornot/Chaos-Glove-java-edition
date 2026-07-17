@@ -20,7 +20,6 @@ public class StarLauncherClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		// J = 74 (G=71 is Chaos Glove only)
 		openMenuKey = KeyBindingHelper.registerKeyBinding(
 			new class_304("key.chaos_glove.star_launcher_menu", 74, "category.chaos_glove")
 		);
@@ -63,7 +62,6 @@ public class StarLauncherClient implements ClientModInitializer {
 			int width = client.method_22683().method_4486();
 			int screenHeight = client.method_22683().method_4502();
 
-			// Same draw API as Chaos Glove HUD
 			gui.method_25300(client.field_1772, StarLauncherItem.getModeDisplayName(mode), width / 2, 10, 0xFFFFFF);
 
 			int left = 12;
