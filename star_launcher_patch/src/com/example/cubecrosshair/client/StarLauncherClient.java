@@ -16,12 +16,11 @@ import net.minecraft.class_437;
 
 @Environment(EnvType.CLIENT)
 public class StarLauncherClient implements ClientModInitializer {
-	/** Separate binding from Chaos Glove (G). J = GLFW key 74. */
+	/** J = GLFW 74. G remains Chaos Glove only. */
 	private static class_304 openMenuKey;
 
 	@Override
 	public void onInitializeClient() {
-		// Key J (74) - does NOT share G with Chaos Glove
 		openMenuKey = KeyBindingHelper.registerKeyBinding(
 			new class_304("key.chaos_glove.star_launcher_menu", 74, "category.chaos_glove")
 		);
@@ -58,17 +57,18 @@ public class StarLauncherClient implements ClientModInitializer {
 			else if (StarLauncherItem.isStarLauncher(off)) stack = off;
 			if (stack == null) return;
 
-			StarLauncherItem.ensureManaInit(stack);
+			try {
+				StarLauncherItem.ensureManaInit(stack);
+			} catch (Throwable ignored) {}
 
 			String mode = StarLauncherItem.getMode(stack);
 			int mana = StarLauncherItem.getMana(stack);
 			int width = client.method_22683().method_4486();
 			int screenHeight = client.method_22683().method_4502();
 
+			// method_25300 = drawCenteredTextWithShadow (same as original glove HUD)
 			String text = StarLauncherItem.getModeDisplayName(mode);
-			String plain = text.replaceAll("\u00a7.", "");
-			int tw = client.field_1772 != null ? client.field_1772.method_1727(plain) : plain.length() * 6;
-			gui.method_25303(client.field_1772, text, width / 2 - tw / 2, 10, 0xFFFFFF, true);
+			gui.method_25300(client.field_1772, text, width / 2, 10, 0xFFFFFF);
 
 			int left = 12;
 			int right = 22;
@@ -89,9 +89,10 @@ public class StarLauncherClient implements ClientModInitializer {
 				gui.method_25294(left, fillTop, left + 3, bottom, 0xFF7CF0FF);
 			}
 
-			gui.method_25303(client.field_1772, "\u00a7b\u041c\u0430\u043d\u0430", left - 2, top - 11, 0xFFFFFF, true);
-			String manaText = mana + "/" + StarLauncherItem.MAX_MANA;
-			gui.method_25303(client.field_1772, "\u00a7b" + manaText, left - 2, bottom + 6, 0xFFFFFF, true);
+			// Center labels on the bar (method_25300 centers on x)
+			int barCx = (left + right) / 2;
+			gui.method_25300(client.field_1772, "\u00a7b\u041c\u0430\u043d\u0430", barCx, top - 11, 0xFFFFFF);
+			gui.method_25300(client.field_1772, "\u00a7b" + mana + "/" + StarLauncherItem.MAX_MANA, barCx, bottom + 6, 0xFFFFFF);
 		}
 	}
 }

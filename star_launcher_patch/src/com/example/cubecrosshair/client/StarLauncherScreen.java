@@ -67,8 +67,9 @@ public class StarLauncherScreen extends class_437 {
 		int tx = centerX - titleW / 2;
 		int ty = centerY - radius - 58;
 		drawWoodPanel(g, tx, ty, titleW, titleH);
-		drawCentered(g, "\u00a76\u00a7l\u0417\u0412\u0401\u0417\u0414\u041d\u042b\u0419 \u0412\u042b\u041f\u0423\u0421\u041a\u0410\u0422\u0415\u041b\u042c", centerX, ty + 7, 0xFFFFFF);
-		drawCentered(g, "\u00a77\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0442\u0438\u0445\u0438\u044e", centerX, ty + 26, 0xFFD0C0A0);
+		// method_25300 centers on x
+		g.method_25300(this.field_22793, "\u00a76\u00a7l\u0417\u0412\u0401\u0417\u0414\u041d\u042b\u0419 \u0412\u042b\u041f\u0423\u0421\u041a\u0410\u0422\u0415\u041b\u042c", centerX, ty + 7, 0xFFFFFF);
+		g.method_25300(this.field_22793, "\u00a77\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0442\u0438\u0445\u0438\u044e", centerX, ty + 26, 0xFFD0C0A0);
 
 		hovered = hitTest(mouseX, mouseY);
 
@@ -76,12 +77,11 @@ public class StarLauncherScreen extends class_437 {
 			double angle = Math.toRadians(-90 + i * 60);
 			int sx = centerX + (int) (Math.cos(angle) * radius) - scrollW / 2;
 			int sy = centerY + (int) (Math.sin(angle) * radius) - scrollH / 2;
-			boolean isHover = (i == hovered);
-			drawScroll(g, sx, sy, scrollW, scrollH, MODES[i], LABELS[i], isHover);
+			drawScroll(g, sx, sy, scrollW, scrollH, MODES[i], LABELS[i], i == hovered);
 		}
 
-		drawCentered(g, "\u00a7e\u041a\u043b\u0438\u043a \u043f\u043e \u0441\u0432\u0438\u0442\u043a\u0443", centerX, centerY - 4, 0xFFFFFF);
-		drawCentered(g, "\u00a78ESC \u2014 \u0437\u0430\u043a\u0440\u044b\u0442\u044c", centerX, centerY + 8, 0xFFAAAAAA);
+		g.method_25300(this.field_22793, "\u00a7e\u041a\u043b\u0438\u043a \u043f\u043e \u0441\u0432\u0438\u0442\u043a\u0443", centerX, centerY - 4, 0xFFFFFF);
+		g.method_25300(this.field_22793, "\u00a78ESC \u2014 \u0437\u0430\u043a\u0440\u044b\u0442\u044c", centerX, centerY + 8, 0xFFAAAAAA);
 	}
 
 	private void drawScroll(class_332 g, int x, int y, int w, int h, String mode, String label, boolean hover) {
@@ -126,10 +126,8 @@ public class StarLauncherScreen extends class_437 {
 		g.method_25294(gx, gy, gx + 10, gy + 10, gem);
 		g.method_25294(gx + 1, gy + 1, gx + 5, gy + 5, lighten(gem, 50));
 
-		int textWidth = this.field_22793 != null ? this.field_22793.method_1727(label) : label.length() * 6;
-		int textX = x + (w - textWidth) / 2;
-		int textY = by + bh / 2 + 4;
-		g.method_25303(this.field_22793, label, textX, textY, textCol, true);
+		// Center label on scroll with method_25300
+		g.method_25300(this.field_22793, label, x + w / 2, by + bh / 2 + 4, textCol);
 
 		if (hover) {
 			g.method_25294(x, by, x + w, by + 1, 0xFFFFD700);
@@ -146,12 +144,6 @@ public class StarLauncherScreen extends class_437 {
 		g.method_25294(x, y, x + 2, y + h, 0xFFC9A227);
 		g.method_25294(x + w - 2, y, x + w, y + h, 0xFFC9A227);
 		g.method_25294(x + 3, y + 3, x + w - 3, y + h - 3, 0xFF7A5230);
-	}
-
-	private void drawCentered(class_332 g, String text, int cx, int y, int color) {
-		String plain = text.replaceAll("\u00a7.", "");
-		int tw = this.field_22793 != null ? this.field_22793.method_1727(plain) : plain.length() * 6;
-		g.method_25303(this.field_22793, text, cx - tw / 2, y, color, true);
 	}
 
 	private void drawFilledCircle(class_332 g, int cx, int cy, int r, int color) {
