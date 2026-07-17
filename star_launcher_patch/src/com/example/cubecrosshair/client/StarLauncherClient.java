@@ -16,11 +16,11 @@ import net.minecraft.class_437;
 
 @Environment(EnvType.CLIENT)
 public class StarLauncherClient implements ClientModInitializer {
-	/** J = GLFW 74. G remains Chaos Glove only. */
 	private static class_304 openMenuKey;
 
 	@Override
 	public void onInitializeClient() {
+		// J = 74 (G=71 is Chaos Glove only)
 		openMenuKey = KeyBindingHelper.registerKeyBinding(
 			new class_304("key.chaos_glove.star_launcher_menu", 74, "category.chaos_glove")
 		);
@@ -36,8 +36,7 @@ public class StarLauncherClient implements ClientModInitializer {
 				if (client.field_1724 == null) continue;
 				class_1799 main = client.field_1724.method_5998(class_1268.field_5808);
 				class_1799 off = client.field_1724.method_5998(class_1268.field_5810);
-				boolean holding = StarLauncherItem.isStarLauncher(main) || StarLauncherItem.isStarLauncher(off);
-				if (!holding) continue;
+				if (!StarLauncherItem.isStarLauncher(main) && !StarLauncherItem.isStarLauncher(off)) continue;
 				client.method_1507((class_437) new StarLauncherScreen());
 			}
 		}
@@ -57,18 +56,15 @@ public class StarLauncherClient implements ClientModInitializer {
 			else if (StarLauncherItem.isStarLauncher(off)) stack = off;
 			if (stack == null) return;
 
-			try {
-				StarLauncherItem.ensureManaInit(stack);
-			} catch (Throwable ignored) {}
+			try { StarLauncherItem.ensureManaInit(stack); } catch (Throwable ignored) {}
 
 			String mode = StarLauncherItem.getMode(stack);
 			int mana = StarLauncherItem.getMana(stack);
 			int width = client.method_22683().method_4486();
 			int screenHeight = client.method_22683().method_4502();
 
-			// method_25300 = drawCenteredTextWithShadow (same as original glove HUD)
-			String text = StarLauncherItem.getModeDisplayName(mode);
-			gui.method_25300(client.field_1772, text, width / 2, 10, 0xFFFFFF);
+			// Same draw API as Chaos Glove HUD
+			gui.method_25300(client.field_1772, StarLauncherItem.getModeDisplayName(mode), width / 2, 10, 0xFFFFFF);
 
 			int left = 12;
 			int right = 22;
@@ -81,15 +77,13 @@ public class StarLauncherClient implements ClientModInitializer {
 			gui.method_25294(left - 2, top - 12, right + 2, bottom + 2, 0xFF5C3A1E);
 			gui.method_25294(left, top, right, bottom, 0xFF0A2030);
 
-			float ratio = mana / (float) StarLauncherItem.MAX_MANA;
-			int filled = (int) (barHeight * ratio);
-			int fillTop = bottom - filled;
+			int filled = (int) (barHeight * (mana / (float) StarLauncherItem.MAX_MANA));
 			if (filled > 0) {
+				int fillTop = bottom - filled;
 				gui.method_25294(left, fillTop, right, bottom, 0xFF1EC8E0);
 				gui.method_25294(left, fillTop, left + 3, bottom, 0xFF7CF0FF);
 			}
 
-			// Center labels on the bar (method_25300 centers on x)
 			int barCx = (left + right) / 2;
 			gui.method_25300(client.field_1772, "\u00a7b\u041c\u0430\u043d\u0430", barCx, top - 11, 0xFFFFFF);
 			gui.method_25300(client.field_1772, "\u00a7b" + mana + "/" + StarLauncherItem.MAX_MANA, barCx, bottom + 6, 0xFFFFFF);
