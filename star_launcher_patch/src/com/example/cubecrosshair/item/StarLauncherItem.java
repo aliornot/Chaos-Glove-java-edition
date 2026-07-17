@@ -1,5 +1,6 @@
 package com.example.cubecrosshair.item;
 
+import com.example.cubecrosshair.CubeCrosshair;
 import net.minecraft.class_1792;
 import net.minecraft.class_1799;
 import net.minecraft.class_2487;
@@ -23,17 +24,64 @@ public class StarLauncherItem extends class_1792 {
 		super(settings);
 	}
 
+	/**
+	 * Reliable detection for chaos_glove:star_launcher.
+	 * Item is registered as plain Item (not StarLauncherItem subclass),
+	 * so we compare against CubeCrosshair.STAR_LAUNCHER / isOf / registry id.
+	 */
 	public static boolean isStarLauncher(class_1799 stack) {
-		if (stack == null || stack.method_7960()) return false;
-		if (stack.method_7909() instanceof StarLauncherItem) return true;
+		if (stack == null) return false;
 		try {
-			class_2960 id = class_7923.field_41178.method_10221(stack.method_7909());
-			return id != null
-				&& "chaos_glove".equals(id.method_12836())
-				&& "star_launcher".equals(id.method_12832());
+			if (stack.method_7960()) return false;
 		} catch (Throwable t) {
 			return false;
 		}
+
+		// 1) Subclass (if ever re-registered as StarLauncherItem)
+		try {
+			if (stack.method_7909() instanceof StarLauncherItem) return true;
+		} catch (Throwable ignored) {}
+
+		// 2) Direct reference equality with registered item (most reliable)
+		try {
+			class_1792 item = stack.method_7909();
+			if (CubeCrosshair.STAR_LAUNCHER != null && item == CubeCrosshair.STAR_LAUNCHER) {
+				return true;
+			}
+		} catch (Throwable ignored) {}
+
+		// 3) ItemStack.isOf(Item) - method_31574
+		try {
+			if (CubeCrosshair.STAR_LAUNCHER != null && stack.method_31574(CubeCrosshair.STAR_LAUNCHER)) {
+				return true;
+			}
+		} catch (Throwable ignored) {}
+
+		// 4) Registry id chaos_glove:star_launcher
+		try {
+			class_1792 item = stack.method_7909();
+			if (item != null && class_7923.field_41178 != null) {
+				class_2960 id = class_7923.field_41178.method_10221(item);
+				if (id != null
+					&& "chaos_glove".equals(id.method_12836())
+					&& "star_launcher".equals(id.method_12832())) {
+					return true;
+				}
+			}
+		} catch (Throwable ignored) {}
+
+		// 5) Translation key fallback: item.chaos_glove.star_launcher
+		try {
+			class_1792 item = stack.method_7909();
+			if (item != null) {
+				String key = item.method_7876(); // getTranslationKey
+				if (key != null && key.contains("star_launcher")) {
+					return true;
+				}
+			}
+		} catch (Throwable ignored) {}
+
+		return false;
 	}
 
 	public static class_2487 nbt(class_1799 stack) {
